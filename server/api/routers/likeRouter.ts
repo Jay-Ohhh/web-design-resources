@@ -1,6 +1,5 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
-import { TRPCError } from "@trpc/server";
 
 export const likeRouter = createTRPCRouter({
     create: privateProcedure

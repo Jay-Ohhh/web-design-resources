@@ -3,7 +3,6 @@
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { trpc } from "@/lib/trpc";
 import { resourceCategories } from "@/lib/constants";
-import { useToast } from "@/components/Toast/useToast";
 import Input from "@/components/ui/Input";
 import Textarea from "@/components/ui/Textarea";
 import { type Inputs } from "@/types/Inputs";
@@ -21,6 +20,7 @@ import { useRouter } from "next/navigation";
 import ResourcePreview from "@/components/ResourcePreview";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useSession } from "next-auth/react";
+import { toast } from "@/components/Toast/useToast";
 
 export default function AddForm() {
     const [title, setTitle] = useState("");
@@ -28,7 +28,6 @@ export default function AddForm() {
     const [tags, setTags] = useState("");
     const [link, setLink] = useState("");
     const [category, setCategory] = useState("");
-    const { toast } = useToast();
     const router = useRouter();
     const { data: session } = useSession() as unknown as { data: UserSession; };
 
@@ -115,7 +114,7 @@ export default function AddForm() {
                                     setDescription(e.target.value);
                                 },
                                 required: true,
-                                minLength: 5,
+                                minLength: 1,
                                 maxLength: 400,
                             })}
                             placeholder="Enter short description of this resource."
@@ -133,7 +132,7 @@ export default function AddForm() {
                                     setTags(e.target.value);
                                 },
                                 required: true,
-                                minLength: 5,
+                                minLength: 1,
                                 maxLength: 100,
                             })}
                             placeholder="Enter tags separated with a comma."

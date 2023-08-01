@@ -1,6 +1,7 @@
 import { createTRPCRouter } from "./trpc";
 import { resourceRouter } from "./routers/resourceRouter";
 import { likeRouter } from "./routers/likeRouter";
+import { commentRouter } from "./routers/commentRouter";
 
 /**
  * This is the primary router for your server
@@ -10,6 +11,7 @@ import { likeRouter } from "./routers/likeRouter";
 export const appRouter = createTRPCRouter({
     resource: resourceRouter,
     like: likeRouter,
+    comment: commentRouter,
 });
 
 export type AppRouter = typeof appRouter;

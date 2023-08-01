@@ -13,9 +13,11 @@ import {
     TooltipTrigger,
 } from "@/components/ui/Tooltip";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
-import { useToast } from "./Toast/useToast";
 import dynamic from "next/dynamic";
 import Image from "next/image";
+import { BsGithub } from "react-icons/bs";
+import { cn } from "@/lib/common";
+import { toast } from "./Toast/useToast";
 const EditMenu = dynamic(() => import("./EditMenu"), { ssr: false });
 
 export type Resource = RouterOutputs["resource"]["getAll"]["resources"][number] & { liked?: boolean; };
@@ -29,14 +31,10 @@ export type ResourceCardProps = {
 export default function ResourceCard(props: ResourceCardProps) {
     const { data, session } = props;
     const [cardData, setCardData] = useState<Resource | null>(data);
-    const { toast } = useToast();
     const [favorite, setFavorite] = useState(cardData?.liked);
     const [likeCount, setLikeCount] = useState(cardData?.likesCount);
-    const context = trpc.useContext();
     const { mutate, isLoading } = trpc.like.create.useMutation({
-        onSuccess: async () => {
-            await context.invalidate();
-        }
+        onSuccess: async () => { }
     });
 
     return cardData ? (
@@ -83,7 +81,7 @@ export default function ResourceCard(props: ResourceCardProps) {
                                         setFavorite(!favorite);
                                         mutate({
                                             resourceId: cardData.id,
-                                            userId: session?.user.id,
+                                            userId: session.user.id,
                                         });
                                     } else {
                                         toast({
@@ -125,7 +123,7 @@ export default function ResourceCard(props: ResourceCardProps) {
             </div>
 
             <div className="flex flex-col justify-start">
-                <p className="my-4 line-clamp-3">{cardData.description}</p>
+                <p className="my-4 line-clamp-3 whitespace-pre-line">{cardData.description}</p>
                 <div className="mb-4 flex flex-wrap gap-1">
                     {cardData.tags?.map((tag) => (
                         <Link
@@ -140,14 +138,23 @@ export default function ResourceCard(props: ResourceCardProps) {
             </div>
             <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
+                    <Link
+                        href={`/resource/${cardData.id}`}
+                        className={buttonVariants({ variant: "default", size: "sm" })}
+                    >
+                        Details
+                    </Link>
+
                     {cardData.githubLink && (
                         <Link
-                            href={`/resource/${cardData.id}`}
-                            className={buttonVariants({ variant: "default", size: "sm" })}
+                            href={cardData.githubLink}
+                            target="_blank"
+                            className={cn(buttonVariants({ variant: "default", size: "sm" }), "w-9 h-9 p-0")}
                         >
-                            Details
+                            <BsGithub size={20} />
                         </Link>
                     )}
+
                     {session?.user?.id === cardData.author?.id && (
                         <TooltipProvider>
                             <Tooltip>
@@ -165,7 +172,7 @@ export default function ResourceCard(props: ResourceCardProps) {
                     <h4 className="flex items-center justify-center gap-1">
                         <Link
                             className="flex items-center gap-1"
-                            href={`/user/${cardData.author.name || ""}`}
+                            href={`/user/${cardData.authorId || ""}`}
                         >
                             <span className="w-24 truncate text-right">
                                 {cardData.author.name}

@@ -1,10 +1,19 @@
 "use client";
 
 import Pagination, { type PaginationProps } from "@/components/ui/Pagination";
-import { useRouter } from "next/navigation";
+import useRouterRefresh from "@/hooks/useRouterRefresh";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 export default function ResPagination(props: PaginationProps) {
-    const router = useRouter();
+    const refresh = useRouterRefresh();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const urlObjRef = useRef<URL | null>(null);
+
+    useEffect(() => {
+        urlObjRef.current = new URL(location.href);
+    }, [searchParams]);
 
     return (
         <div className="flex justify-center">
@@ -13,7 +22,8 @@ export default function ResPagination(props: PaginationProps) {
                 pageSize={props.pageSize}
                 total={props.total}
                 onPageChange={(e, value) => {
-                    router.push(`/resources?offset=${value - 1}`);
+                    urlObjRef.current?.searchParams.set("offset", String(value - 1));
+                    refresh(pathname + urlObjRef.current?.search);
                 }}
             />
         </div>

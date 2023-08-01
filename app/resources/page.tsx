@@ -13,13 +13,13 @@ import { resourceCategoriesSlug } from "@/lib/constants";
 type Resource = RouterOutputs["resource"]["getAll"]["resources"][number];
 type PageProps = {
     params: { category?: string; tag?: string; },
-    searchParams: { offset?: string; limit?: string; };
+    searchParams: { offset?: string; limit?: string; public?: string; };
 };
 
 export async function generateMetadata(
     { params, searchParams }: PageProps,
     parent?: ResolvingMetadata
-) {
+): Promise<Metadata> {
     // console.log(await parent);
     const { category, tag } = params;
     const title = tag
@@ -43,6 +43,7 @@ export default async function Resources(props: PageProps) {
     const limit = _limit > 0 ? _limit : 20;
 
     const session = await getServerSession(authOptions) as (UserSession | null);
+    const openSourceQuery = searchParams.public ? { not: null } : undefined;
 
     const { resources, total } = await (async () => {
         const [res, total] = await prisma.$transaction([
@@ -59,11 +60,12 @@ export default async function Resources(props: PageProps) {
                             some: {
                                 name: tag,
                             }
-                        }
+                        },
+                        githubLink: openSourceQuery
                     }
                     : resourceCategoriesSlug.includes(category as any)
-                        ? { categorySlug: category }
-                        : undefined,
+                        ? { categorySlug: category, githubLink: openSourceQuery }
+                        : { githubLink: openSourceQuery },
                 orderBy: {
                     likesCount: "desc"
                 },
@@ -117,7 +119,7 @@ export default async function Resources(props: PageProps) {
     return (
         <>
             {Nav}
-            <main className="min-h-screen">
+            <main>
                 <div className="mx-auto grid w-full max-w-screen-xl grid-cols-1 justify-center gap-4 px-4 pb-20 pt-6 md:grid-cols-2 md:pt-12">
                     {resources?.map((item: Resource) => (
                         <ResourceCard

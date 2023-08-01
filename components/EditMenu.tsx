@@ -38,10 +38,10 @@ import { trpc } from "@/lib/trpc";
 import Textarea from "./ui/Textarea";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { FaTrash } from "react-icons/fa";
-import { useToast } from "./Toast/useToast";
 import LoadingSpinner from "./ui/LoadingSpinner";
 import { type MutationOptions } from "@tanstack/react-query";
 import { type Resource } from "./ResourceCard";
+import { toast } from "./Toast/useToast";
 
 export type EditMenuProps = {
     data: Resource;
@@ -50,8 +50,6 @@ export type EditMenuProps = {
 
 export default function EditMenu(props: EditMenuProps) {
     const { data, setData } = props;
-    const context = trpc.useContext();
-    const { toast } = useToast();
     const [category, setCategory] = useState(data.category);
     const [formOpen, setFormOpen] = useState(false);
 
@@ -70,13 +68,12 @@ export default function EditMenu(props: EditMenuProps) {
                 title: "Success 🎉",
                 description: `Resource ${data.title} updated successfully.`,
             });
-            await context.resource.invalidate();
         },
         onError: handleError
     });
 
     const { mutate: mutateDelete, isLoading: isLoadingDelete } = trpc.resource.delete.useMutation({
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             setData(null);
             toast({
                 title: "Success 🎉",
@@ -174,7 +171,7 @@ export default function EditMenu(props: EditMenuProps) {
                             defaultValue={data.description}
                             {...register("description", {
                                 required: true,
-                                minLength: 5,
+                                minLength: 1,
                                 maxLength: 400,
                             })}
                             className="col-span-3"
@@ -192,7 +189,7 @@ export default function EditMenu(props: EditMenuProps) {
                                 .replace(/\s/g, "")}
                             {...register("tags", {
                                 required: true,
-                                minLength: 5,
+                                minLength: 1,
                                 maxLength: 100,
                             })}
                             className="col-span-3"

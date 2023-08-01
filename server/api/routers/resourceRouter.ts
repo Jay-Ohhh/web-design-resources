@@ -1,31 +1,15 @@
 import { z } from "zod";
-import { type GithubData } from "@/types/GithubData";
 import { createTRPCRouter, publicProcedure, privateProcedure } from "../trpc";
 import { TRPCError } from "@trpc/server";
 import { resourceCategories } from "@/lib/constants";
-import { env } from "@/env/server.mjs";
-import { type Prisma } from "@prisma/client";
+import { getGithubRepo } from "@/lib/server";
 
-async function getGithubRepo(url: string) {
-    const urlWithoutProtocol = url.replace(/(^\w+:|^)\/\//, "");
-    const path = urlWithoutProtocol.split("/").slice(1).join("/");
-    /**
-     * @see https://docs.github.com/en/rest/repos/repos?apiVersion=2022-11-28#get-a-repository
-     */
-    return await fetch(`https://api.github.com/repos/${path}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${env.GITHUB_TOKEN || ""}`,
-        },
-        cache: "no-store",
-    }).then((res) => res.json()) as GithubData;
-}
 
 function purifyTags(tags: string) {
     return (
         tags
             .replace(/\s/g, "")
-            .split(",")
+            .split(/,|，/)
             .reduce((acc, tag) => {
                 tag && acc.push(tag);
 
@@ -142,7 +126,7 @@ export const resourceRouter = createTRPCRouter({
                 title: z.string().min(1).max(50),
                 tags: z.string().min(1).max(100),
                 link: z.string().min(1).max(250),
-                githubLink: z.string().max(250),
+                githubLink: z.string().max(250).optional(),
                 category: z.enum(resourceCategories),
                 categorySlug: z.string(),
                 authType: z.string(),
@@ -158,7 +142,7 @@ export const resourceRouter = createTRPCRouter({
                 });
             }
 
-            const githubData = await getGithubRepo(input.githubLink);
+            const githubData = input.githubLink ? await getGithubRepo(input.githubLink) : null;
 
             const tagArray = purifyTags(input.tags);
 
@@ -167,12 +151,9 @@ export const resourceRouter = createTRPCRouter({
                     authorId,
                     description: input.description,
                     link: input.link,
-                    githubLink: input.githubLink,
+                    githubLink: input.githubLink || null,
                     title: input.title,
-                    githubAvatar:
-                        !githubData.owner
-                            ? ""
-                            : githubData.owner.avatar_url,
+                    githubAvatar: githubData?.owner.avatar_url || null,
                     category: input.category,
                     categorySlug: input.categorySlug,
                     authType: input.authType,
@@ -200,14 +181,14 @@ export const resourceRouter = createTRPCRouter({
                 title: z.string().min(1).max(50),
                 tags: z.string().min(5).max(100),
                 link: z.string().min(1).max(250),
-                githubLink: z.string().max(250),
+                githubLink: z.string().max(250).optional(),
                 category: z.enum(resourceCategories),
                 categorySlug: z.string(),
             })
         )
         .mutation(async ({ ctx, input }) => {
             const authorId = ctx.userId;
-            const githubData = await getGithubRepo(input.githubLink);
+            const githubData = input.githubLink ? await getGithubRepo(input.githubLink) : null;
             const {
                 resourceId,
                 description,
@@ -259,11 +240,8 @@ export const resourceRouter = createTRPCRouter({
                     description,
                     title,
                     link,
-                    githubLink,
-                    githubAvatar:
-                        !githubData.owner
-                            ? ""
-                            : githubData.owner.avatar_url,
+                    githubLink: githubLink || null,
+                    githubAvatar: githubData?.owner.avatar_url || null,
                     category,
                     categorySlug,
                     tags: {

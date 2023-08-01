@@ -1,6 +1,5 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "@/components/ui/Link";
 import Button, { buttonVariants } from "./ui/Button";
 import { FaPlus } from "react-icons/fa";
@@ -39,6 +38,24 @@ export default function Navbar() {
                 <div className="flex items-center justify-end gap-3">
                     <ThemeSwitch />
                     <MobileSearchBar />
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger>
+                                <Link
+                                    href="/resources"
+                                    className={`${buttonVariants({
+                                        variant: "default",
+                                        size: "icon",
+                                    })} flex h-7 w-7 shrink-0 items-center justify-center`}
+                                >
+                                    <span className="text-[17px]">R</span>
+                                </Link>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>Explore resources</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                     {status === "authenticated" ? (
                         <div className="flex items-center gap-3">
                             <TooltipProvider>

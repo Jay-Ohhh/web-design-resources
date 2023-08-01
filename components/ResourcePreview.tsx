@@ -16,7 +16,7 @@ export type ResourcePreviewProps = {
 const splitTagsToArray = (tags: string) => {
     return tags
         .replace(/\s/g, "")
-        .split(",")
+        .split(/,|，/)
         .reduce((acc, tag) => {
             if (tag) {
                 acc.push(

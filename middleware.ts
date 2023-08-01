@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
-const skipAuthPageRegExp = /^\/(login|register|resources(\/(?!add).*)?|terms-and-conditions)?$/;
+const skipAuthPageRegExp = /^\/(login|register|resources(\/(?!add).*)?|terms-and-conditions|user\/.*)?$/;
 
 export const config = {
     matcher: [

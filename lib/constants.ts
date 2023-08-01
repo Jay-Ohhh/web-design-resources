@@ -1,3 +1,5 @@
+import { env } from "@/env/client.mjs";
+import { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 export const inter = Inter({
@@ -76,3 +78,86 @@ export const resourceCategoriesSlug = [
 ] as const;
 
 
+const title = "Web Design Resources";
+const description = "A platform for sharing the best design Resources around the web.";
+const author = "Jay_Ohhh";
+
+export const defaultMetadata: Metadata = {
+    title,
+    description,
+    keywords: "Web Design,resources,applications,UI libraries,tools,starters,boilerplates,tutorials,articles,software",
+    authors: [
+        {
+            name: author,
+            url: "https://github.com/Jay-Ohhh",
+        }
+    ],
+    creator: "Jay_Ohhh",
+    publisher: "Jay_Ohhh",
+    viewport: {
+        width: "device-width",
+        initialScale: 1,
+        maximumScale: 5,
+        viewportFit: "cover",
+    },
+    applicationName: title,
+    colorScheme: "light dark",
+    metadataBase: new URL(env.NEXT_PUBLIC_NEXTAUTH_URL),
+    themeColor: [
+        {
+            media: "(prefers-color-scheme: light)",
+            color: "#ffffff",
+        },
+        {
+            media: "(prefers-color-scheme: dark)",
+            color: "#0f172a",
+        },
+    ],
+    category: "web app",
+    openGraph: {
+        title,
+        description,
+        url: env.NEXT_PUBLIC_NEXTAUTH_URL,
+        siteName: "Web Design Resources",
+        images: [
+            {
+                url: "/images/web-design-resources.jpg",
+                width: 750,
+                height: 480,
+                alt: title,
+            },
+        ],
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title,
+        description,
+        siteId: "1662405059479740416",
+        creator: author,
+        creatorId: "1662405059479740416",
+        images: ["/images/web-design-resources.jpg",],
+    },
+    icons: {
+        icon: "/favicon.ico",
+        other: [
+            {
+                rel: "apple-touch-icon",
+                sizes: "180x180",
+                url: "/images/icons/logo.svg",
+                fetchPriority: "low",
+            },
+            {
+                rel: "mask-icon",
+                url: "/images/icons/logo.svg",
+                fetchPriority: "low",
+            },
+        ].filter(item => !!item.url) as any[]
+    },
+    other: {
+        "applicable-device": "pc,mobile",
+        "msapplication-TileColor": "#ffffff",
+        // "baidu-site-verification": ""
+    }
+};
