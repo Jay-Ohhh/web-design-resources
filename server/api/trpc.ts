@@ -11,8 +11,7 @@ import superjson from "superjson";
 import { ZodError } from "zod";
 import { prisma } from "@/server/db";
 import { type FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
+import { fetchServerSession } from "@/app/api/auth/[...nextauth]/authOptions";
 
 /**
  * This is the actual context you will use in your router. It will be used to process every request
@@ -21,7 +20,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
  * @see https://trpc.io/docs/context
  */
 export const createTRPCContext = async (opts: FetchCreateContextFnOptions) => {
-    const session = await getServerSession(authOptions) as unknown as (UserSession | null);
+    const session = await fetchServerSession();
 
     return {
         prisma,

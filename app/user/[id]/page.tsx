@@ -1,22 +1,32 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import Link from "@/components/ui/Link";
 import { prisma } from "@/server/db";
-import { getServerSession } from "next-auth";
 import Image from "next/image";
 import { AiFillGithub, AiFillHeart } from "react-icons/ai";
 import NotFoundPage from "../../not-found";
 import { IoMdCreate } from "react-icons/io";
-import { slugify } from "@/lib/common";
+import { cn, slugify } from "@/lib/common";
 import ResourceCard, { Resource } from "@/components/ResourceCard";
+import { Prisma } from "@prisma/client";
+import ButtonLink from "@/components/ui/ButtonLink";
+import { fetchServerSession } from "@/app/api/auth/[...nextauth]/authOptions";
 
 type PageProps = {
     params: {
         id: string;
     };
+    searchParams: {
+        tab?: string;
+    };
 };
 
+const likeWithResource = Prisma.validator<Prisma.LikeFindManyArgs>()({
+    include: { resource: { include: { tags: true } } },
+});
+
+type LikeWithResource = Prisma.LikeGetPayload<typeof likeWithResource>;
+
 export default async function User(props: PageProps) {
-    const { params } = props;
+    const { params, searchParams } = props;
 
     const profile = await prisma.user.findUnique({
         where: {
@@ -32,60 +42,65 @@ export default async function User(props: PageProps) {
     }
 
     const account = profile.accounts.find(item => item.userId === params.id);
-    const session = await getServerSession(authOptions) as UserSession | null;
-    const res = await prisma.$transaction([
-        prisma.nextResource.findMany({
-            where: {
-                authorId: params.id
-            },
-            include: {
-                tags: true,
-                author: true,
-            },
-            orderBy: {
-                createdAt: "desc",
-            }
-        }),
-        prisma.like.findMany({
-            where: {
-                userId: params.id
-            },
-            include: {
-                resource: {
-                    include: {
-                        tags: true,
-                        author: true,
-                    }
-                }
-            },
-            orderBy: {
-                createdAt: "desc",
-            }
-        }),
-    ]);
-
-    const createdResources = res[0] as Resource[];
-    const likes = res[1];
-    const likedResources = likes.map(item => ({
-        ...item.resource,
-        liked: true
-    })) as Resource[];
-
-    if (session?.user.id) {
-        const likes = await Promise.allSettled(createdResources.map(item => {
-            return prisma.like.findFirst({
+    const taskValues = await Promise.all([
+        fetchServerSession(),
+        searchParams.tab === "added-resources"
+            ? prisma.nextResource.findMany({
                 where: {
-                    resourceId: item.id,
-                    userId: session.user.id,
+                    authorId: params.id
+                },
+                include: {
+                    tags: true,
+                    author: true,
+                },
+                orderBy: {
+                    createdAt: "desc",
+                }
+            })
+            : prisma.like.findMany({
+                where: {
+                    userId: params.id
+                },
+                include: {
+                    resource: {
+                        include: {
+                            tags: true,
+                            author: true,
+                        }
+                    }
+                },
+                orderBy: {
+                    createdAt: "desc",
+                }
+            })
+    ]);
+    const session = taskValues[0] as UserSession | null;
+    let resources = taskValues[1] as Resource[];
+
+    if (searchParams.tab === "added-resources") {
+        if (session?.user.id) {
+            const likes = await Promise.allSettled(resources.map(item => {
+                return prisma.like.findFirst({
+                    where: {
+                        resourceId: item.id,
+                        userId: session.user.id,
+                    }
+                });
+            }));
+
+            likes.forEach((data, index) => {
+                if (data.status === "fulfilled" && !!data.value) {
+                    (resources as Resource[])[index].liked = true;
                 }
             });
-        }));
-
-        likes.forEach((data, index) => {
-            if (data.status === "fulfilled" && !!data.value) {
-                createdResources[index].liked = true;
-            }
-        });
+        }
+    } else {
+        resources = (resources as unknown as LikeWithResource[]).map(item => {
+            return {
+                ...item.resource,
+                liked: true
+            };
+        }) as Resource[];
     }
 
     return (
@@ -102,12 +117,15 @@ export default async function User(props: PageProps) {
                     {profile.name}
                 </h2>
                 <div className="flex flex-col items-center gap-2">
-                    <h4 className="flex items-center justify-center gap-1 font-medium lg:text-lg">
-                        <AiFillHeart /> Liked: {likes.length}
-                    </h4>
-                    <h4 className="flex items-center justify-center gap-1 font-medium lg:text-lg">
-                        <IoMdCreate /> Added: {createdResources.length}
-                    </h4>
+                    {searchParams.tab === "added-resources" ? (
+                        <h4 className="flex items-center justify-center gap-1 font-medium lg:text-lg">
+                            <IoMdCreate /> Added: {resources.length}
+                        </h4>
+                    ) : (
+                        <h4 className="flex items-center justify-center gap-1 font-medium lg:text-lg">
+                            <AiFillHeart /> Liked: {resources.length}
+                        </h4>
+                    )}
                     {account?.provider === "github" && profile.name && (
                         <Link
                             target="_blank"
@@ -118,50 +136,52 @@ export default async function User(props: PageProps) {
                     )}
                 </div>
             </div>
-            <div className="flex flex-col gap-12 rounded-lg md:grid md:col-span-4 md:grid-cols-2 md:gap-4 md:border md:p-4">
-                <div>
-                    <h3 className="flex items-center justify-center gap-2 p-4 text-xl font-medium md:p-0">
-                        Favourite resources
+            <div className="col-span-4 flex flex-col gap-12 rounded-lg md:gap-4 md:border md:p-4">
+                <div className="flex justify-around">
+                    <ButtonLink
+                        className="flex items-center justify-center gap-2 p-4 text-xl font-medium md:p-0"
+                        url={`/user/${params.id}`}
+                    >
+                        <div className={cn(
+                            "relative",
+                            !searchParams.tab && "after:absolute after:-bottom-3 after:left-1/2 after:-translate-x-1/2 after:w-16 after:border-b-[3px] after:border-[#ee9279]"
+                        )}>
+                            Favourite resources
+                        </div>
                         <AiFillHeart
-                            className="text-slate-600 dark:text-slate-400"
+                            className="hidden sm:block text-slate-600 dark:text-slate-400"
                             size={20}
                         />
-                    </h3>
-                    <div className="mt-8 flex flex-col gap-4">
-                        {likedResources?.map((item) => (
-                            <ResourceCard
-                                key={item.id}
-                                data={item}
-                                session={session}
-                                shadowEnabled={false}
-                            />
-                        ))}
-                        {likedResources.length <= 0 && (
-                            <div className="mb-4 text-center text-lg">Nothing found</div>
-                        )}
-                    </div>
-                </div>
-                <div className="">
-                    <h3 className="flex items-center justify-center gap-2 p-4 text-xl font-medium md:p-0">
-                        Added resources
+                    </ButtonLink>
+                    <ButtonLink
+                        className="flex items-center justify-center gap-2 p-4 text-xl font-medium md:p-0"
+                        url={`/user/${params.id}?tab=added-resources`}
+                    >
+                        <div className={cn(
+                            "relative",
+                            searchParams.tab === "added-resources" &&
+                            "after:absolute after:-bottom-3 after:left-1/2 after:-translate-x-1/2 after:w-16 after:border-b-[3px] after:border-[#ee9279]"
+                        )}>
+                            Added resources
+                        </div>
                         <IoMdCreate
-                            className="text-slate-600 dark:text-slate-400"
+                            className="hidden sm:block text-slate-600 dark:text-slate-400"
                             size={20}
                         />
-                    </h3>
-                    <div className="mt-8 flex flex-col gap-4">
-                        {createdResources?.map((item) => (
-                            <ResourceCard
-                                key={item.id}
-                                data={item}
-                                session={session}
-                                shadowEnabled={false}
-                            />
-                        ))}
-                        {createdResources.length <= 0 && (
-                            <div className="mb-4 text-center text-lg">Nothing found 😞</div>
-                        )}
-                    </div>
+                    </ButtonLink>
+                </div>
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {resources?.map((item) => (
+                        <ResourceCard
+                            key={item.id}
+                            data={item}
+                            session={session}
+                            shadowEnabled={false}
+                        />
+                    ))}
+                    {(!resources || resources.length <= 0) && (
+                        <div className="mb-4 text-center text-lg">Nothing found</div>
+                    )}
                 </div>
             </div>
         </main>

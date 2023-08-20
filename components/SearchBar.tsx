@@ -3,18 +3,22 @@
 import React, { useState } from "react";
 import Input from "./ui/Input";
 import { FaSearch } from "react-icons/fa";
-import { useRouter } from "next/navigation";
+import useRouterRefresh from "@/hooks/useRouterRefresh";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const SearchBar = () => {
-    const [query, setQuery] = useState("");
-    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const _query = searchParams.get("query") || "";
+    const [query, setQuery] = useState(pathname === "/search" ? _query : "");
+    const refresh = useRouterRefresh();
 
     return (
         <div className="col-span-3 hidden justify-center md:flex">
             <form
                 onSubmit={(e) => {
                     e.preventDefault();
-                    void router.push(`/search?q=${query}`);
+                    refresh(`/search?query=${query}`);
                 }}
                 className="relative w-96"
             >

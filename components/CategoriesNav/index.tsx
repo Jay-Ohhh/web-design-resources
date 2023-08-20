@@ -54,7 +54,7 @@ export default function CategoriesNav(props: CategoriesNavProps) {
                                         Most popular:
                                     </h3>
                                     <div className="flex flex-wrap gap-4">
-                                        {props.resources?.slice(0, 5).map((item) => (
+                                        {props.resources?.slice(0, 5).map(item => (
                                             <Link
                                                 key={item.id}
                                                 href={item.link}

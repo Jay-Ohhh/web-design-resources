@@ -5,22 +5,22 @@ import SingleCategoryNavItem from "@/components/SingleCategoryNavItem";
 import { homepageCards } from "@/lib/constants";
 import { ResolvingMetadata, type Metadata } from "next";
 import ResourceCard from "@/components/ResourceCard";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../api/auth/[...nextauth]/authOptions";
 import ResPagination from "./ResPagination";
 import { resourceCategoriesSlug } from "@/lib/constants";
+import { fetchServerSession } from "../api/auth/[...nextauth]/authOptions";
+import { type Prisma } from "@prisma/client";
+import { headers } from "next/headers";
 
 type Resource = RouterOutputs["resource"]["getAll"]["resources"][number];
 type PageProps = {
     params: { category?: string; tag?: string; },
-    searchParams: { offset?: string; limit?: string; public?: string; };
+    searchParams: { offset?: string; limit?: string; public?: string; query?: string; };
 };
 
 export async function generateMetadata(
     { params, searchParams }: PageProps,
     parent?: ResolvingMetadata
 ): Promise<Metadata> {
-    // console.log(await parent);
     const { category, tag } = params;
     const title = tag
         ? `Web Design Resources - ${tag}`
@@ -36,14 +36,51 @@ export async function generateMetadata(
 export default async function Resources(props: PageProps) {
     const { params, searchParams } = props;
     const { category, tag } = params;
+    const headerList = headers();
+    const urlObj = new URL(headerList.get("x-current-url")!);
 
     const _offset = Number(searchParams.offset);
     const offset = _offset > 0 ? _offset : 0;
     const _limit = Number(searchParams.limit);
     const limit = _limit > 0 ? _limit : 20;
 
-    const session = await getServerSession(authOptions) as (UserSession | null);
-    const openSourceQuery = searchParams.public ? { not: null } : undefined;
+    const session = await fetchServerSession();
+    const isOpenSourceQuery = searchParams.public ? {
+        githubLink: { not: null }
+    } : {};
+
+    const where: Prisma.NextResourceWhereInput = (tag && urlObj.pathname.startsWith("/tag/"))
+        // tag query
+        ? {
+            tags: {
+                some: {
+                    name: tag,
+                }
+            },
+            ...isOpenSourceQuery,
+        }
+        // search query
+        : (searchParams.query && urlObj.pathname === "/search")
+            ? {
+                OR: [
+                    {
+                        title: {
+                            contains: searchParams.query
+                        }
+                    },
+                    {
+                        description: {
+                            contains: searchParams.query
+                        }
+                    },
+                ],
+                ...isOpenSourceQuery
+            }
+            // /resources/[category] query
+            : resourceCategoriesSlug.includes(category as any)
+                ? { categorySlug: category, ...isOpenSourceQuery }
+                // default query
+                : isOpenSourceQuery;
 
     const { resources, total } = await (async () => {
         const [res, total] = await prisma.$transaction([
@@ -54,23 +91,12 @@ export default async function Resources(props: PageProps) {
                     tags: true,
                     author: true,
                 },
-                where: tag
-                    ? {
-                        tags: {
-                            some: {
-                                name: tag,
-                            }
-                        },
-                        githubLink: openSourceQuery
-                    }
-                    : resourceCategoriesSlug.includes(category as any)
-                        ? { categorySlug: category, githubLink: openSourceQuery }
-                        : { githubLink: openSourceQuery },
+                where,
                 orderBy: {
                     likesCount: "desc"
                 },
             }),
-            prisma.nextResource.count(),
+            prisma.nextResource.count({ where }),
         ]);
 
         const resources = res as (typeof res[number] & { liked?: boolean; })[];
@@ -121,7 +147,7 @@ export default async function Resources(props: PageProps) {
             {Nav}
             <main>
                 <div className="mx-auto grid w-full max-w-screen-xl grid-cols-1 justify-center gap-4 px-4 pb-20 pt-6 md:grid-cols-2 md:pt-12">
-                    {resources?.map((item: Resource) => (
+                    {resources?.map((item) => (
                         <ResourceCard
                             key={item.id}
                             data={item}

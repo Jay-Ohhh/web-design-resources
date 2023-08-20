@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withAuth } from "next-auth/middleware";
 
-const skipAuthPageRegExp = /^\/(login|register|resources(\/(?!add).*)?|terms-and-conditions|user\/.*)?$/;
+const skipAuthPageRegExp = /^\/(login|register|resources(\/(?!add).*)?|tag(\/.*)?|search(\/.*)?|terms-and-conditions|user\/.*)?$/;
 
 export const config = {
     matcher: [
@@ -22,7 +22,20 @@ export const config = {
 export default withAuth(
     // `withAuth` augments your `Request` with the user's token.
     function middleware(req) {
-        // console.log(req.nextauth.token, 111);
+        // console.log(req.nextauth.token);
+        /**
+         * @see https://github.com/vercel/next.js/issues/43704
+         * @see https://nextjs.org/docs/app/api-reference/functions/next-response#next
+         */
+        const requestHeaders = new Headers(req.headers);
+        requestHeaders.set("x-current-url", req.url);
+
+        return NextResponse.next({
+            request: {
+                // Apply new request headers
+                headers: requestHeaders,
+            }
+        });
     },
     {
         callbacks: {

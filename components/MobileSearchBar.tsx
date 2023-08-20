@@ -6,12 +6,16 @@ import Button from "./ui/Button";
 import { FaSearch } from "react-icons/fa";
 import { MdClose } from "react-icons/md";
 import { motion, AnimatePresence } from "framer-motion";
-import { useRouter } from "next/navigation";
+import useRouterRefresh from "@/hooks/useRouterRefresh";
+import { usePathname, useSearchParams } from "next/navigation";
 
 const MobileSearchBar = () => {
     const [mobileSearchVisible, setMobileSearchVisible] = useState(false);
-    const [query, setQuery] = useState("");
-    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
+    const _query = searchParams.get("query") || "";
+    const [query, setQuery] = useState(pathname === "/search" ? _query : "");
+    const refresh = useRouterRefresh();
 
     return (
         <div className="md:hidden">
@@ -36,11 +40,12 @@ const MobileSearchBar = () => {
                             <form
                                 onSubmit={(e) => {
                                     e.preventDefault();
-                                    void router.push(`/search?q=${query}`);
+                                    refresh(`/search?query=${query}`);
                                 }}
                                 className="relative h-full w-full"
                             >
                                 <Input
+                                    value={query}
                                     onChange={(e) => setQuery(e.target.value)}
                                     className="h-full w-full rounded-xl"
                                     placeholder="Search..."

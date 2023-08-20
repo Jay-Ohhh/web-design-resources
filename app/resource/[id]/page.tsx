@@ -1,12 +1,11 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/authOptions";
 import NotFoundPage from "@/app/not-found";
 import { prisma } from "@/server/db";
 import { ResolvingMetadata, type Metadata } from "next";
-import { getServerSession } from "next-auth";
 import { getGithubRepo } from "@/lib/server";
 import Resource from "./Resource";
 import { defaultMetadata } from "@/lib/constants";
 import ResourceComment from "./ResourceComment";
+import { fetchServerSession } from "@/app/api/auth/[...nextauth]/authOptions";
 
 type PageProps = {
     params: {
@@ -56,7 +55,7 @@ export async function generateMetadata(
 
 export default async function ResourceDetail(props: PageProps) {
     const { id } = props.params;
-    const session = await getServerSession(authOptions) as UserSession | null;
+    const session = await fetchServerSession();
     const [
         data,
         comments,
