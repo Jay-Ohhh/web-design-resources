@@ -4,6 +4,7 @@ import Link from "@/components/ui/Link";
 import { AiFillGithub } from "react-icons/ai";
 import { useTheme } from "next-themes";
 import Image from "next/image";
+import SiteLogo from "./SiteLogo";
 
 const Footer = () => {
     const { theme } = useTheme();
@@ -14,9 +15,7 @@ const Footer = () => {
                 <div className="md:flex md:justify-between">
                     <div className="mb-6 md:mb-0">
                         <Link href="/" className="flex items-center">
-                            <Image
-                                src={theme === "dark" ? "/images/icons/logo-dark.svg" : "/images/icons/logo.svg"}
-                                alt="Site logo"
+                            <SiteLogo
                                 className="mr-3 w-10"
                                 width={40}
                                 height={40}

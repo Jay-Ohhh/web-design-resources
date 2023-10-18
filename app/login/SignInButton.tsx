@@ -14,7 +14,7 @@ export default function SignButton() {
     const disabled = githubDisabled || googleDisabled;
 
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 text-black">
             <button
                 className="group w-full flex justify-between items-center px-5 py-2 border outline-none rounded-md text-[13px] transition hover:bg-[#f5f5f5] disabled:bg-[#f5f5f5] disabled:pointer-events-none"
                 disabled={disabled}

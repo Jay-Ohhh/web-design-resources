@@ -11,24 +11,23 @@ import {
     TooltipTrigger,
 } from "./ui/Tooltip";
 import { signIn, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import DropdownAvatar from "./DropdownAvatar";
 import SearchBar from "./SearchBar";
 import MobileSearchBar from "./MobileSearchBar";
 import ThemeSwitch from "./ThemeSwitch";
-import Image from "next/image";
+import SiteLogo from "./SiteLogo";
+import { clientEnv } from "@/env/client.mjs";
+
+const tooltipDelayDuration = 300;
 
 export default function Navbar() {
-    const { theme } = useTheme();
     const { status } = useSession();
 
     return (
         <nav className="sticky z-50 top-0 border-b-2 border-gray-200 bg-gradient-to-br dark:border-gray-800">
             <div className="mx-auto flex h-20 max-w-screen-xl flex-wrap items-center justify-between px-4 md:grid md:grid-cols-5">
                 <Link href="/" className="flex max-w-fit items-center">
-                    <Image
-                        src={theme === "dark" ? "/images/icons/logo-dark.svg" : "/images/icons/logo.svg"}
-                        alt="Site logo"
+                    <SiteLogo
                         className="mr-3 w-10"
                         width={40}
                         height={40}
@@ -38,7 +37,7 @@ export default function Navbar() {
                 <div className="flex items-center justify-end gap-3">
                     <ThemeSwitch />
                     <MobileSearchBar />
-                    <TooltipProvider>
+                    <TooltipProvider delayDuration={tooltipDelayDuration}>
                         <Tooltip>
                             <TooltipTrigger>
                                 <Link
@@ -56,9 +55,30 @@ export default function Navbar() {
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
+                    {clientEnv.NEXT_PUBLIC_BLOG_URL && (
+                        <TooltipProvider delayDuration={tooltipDelayDuration}>
+                            <Tooltip>
+                                <TooltipTrigger>
+                                    <Link
+                                        href={clientEnv.NEXT_PUBLIC_BLOG_URL}
+                                        target="_blank"
+                                        className={`${buttonVariants({
+                                            variant: "default",
+                                            size: "icon",
+                                        })} flex h-7 w-7 shrink-0 items-center justify-center`}
+                                    >
+                                        <span className="text-[17px]">B</span>
+                                    </Link>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>My blog</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </TooltipProvider>
+                    )}
                     {status === "authenticated" ? (
                         <div className="flex items-center gap-3">
-                            <TooltipProvider>
+                            <TooltipProvider delayDuration={tooltipDelayDuration}>
                                 <Tooltip>
                                     <TooltipTrigger>
                                         <Link

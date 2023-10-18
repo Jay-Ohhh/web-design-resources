@@ -116,6 +116,18 @@ export const authOptions: NextAuthOptions = {
             return token;
         }
     },
+    events: {
+        signIn(message) {
+            prisma.user.update({
+                where: {
+                    id: message.user.id,
+                },
+                data: {
+                    signInAt: new Date(),
+                }
+            });
+        }
+    }
 };
 
 export async function fetchServerSession() {

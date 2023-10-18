@@ -4,7 +4,7 @@ import { badgeVariants } from "./ui/Badge";
 import { buttonVariants } from "./ui/Button";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
+import SiteLogo from "./SiteLogo";
 
 export type ResourcePreviewProps = {
     title: string;
@@ -31,16 +31,13 @@ const splitTagsToArray = (tags: string) => {
 };
 
 export default function ResourcePreview(props: ResourcePreviewProps) {
-    const { theme } = useTheme();
     const { data: session } = useSession();
 
     return (
         <div className="flex flex-col justify-between rounded-xl border p-4 shadow-lg shadow-slate-950/5 dark:shadow-slate-500/5">
             <div className="flex items-center gap-2">
-                <Image
+                <SiteLogo
                     className="flex-shrink-0"
-                    src={theme === "dark" ? "/images/icons/logo-dark.svg" : "/images/icons/logo.svg"}
-                    alt="logo"
                     width={34}
                     height={34}
                 />

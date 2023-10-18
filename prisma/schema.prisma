@@ -45,11 +45,12 @@ model User {
   email         String?        @unique
   emailVerified DateTime?
   image         String?
+  signInAt      DateTime       @default(now())
   accounts      Account[]
   sessions      Session[]
-  NextResource  NextResource[]
-  Like          Like[]
-  Comment       Comment[]
+  nextResources NextResource[]
+  likes         Like[]
+  comments      Comment[]
 }
 
 model VerificationToken {
@@ -71,7 +72,7 @@ model NextResource {
   tags         Tag[]
   comments     Comment[]
   link         String    @unique
-  author       User      @relation(fields: [authorId], references: [id])
+  author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId     String
   authType     String
   likes        Like[]
@@ -85,7 +86,7 @@ model NextResource {
 model Like {
   id         String       @id @default(cuid())
   createdAt  DateTime     @default(now())
-  user       User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user       User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     String?
   resource   NextResource @relation(fields: [resourceId], references: [id], onDelete: Cascade)
   resourceId String

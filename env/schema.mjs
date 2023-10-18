@@ -14,6 +14,7 @@ export const clientSchema = z.object({
         (str) => process.env.NEXT_PUBLIC_VERCEL_URL ?? str,
         process.env.NEXT_PUBLIC_VERCEL_URL ? z.string() : z.string().url()
     ),
+    NEXT_PUBLIC_BLOG_URL: z.string().url().optional(),
 });
 
 /**

@@ -2,6 +2,7 @@ import { clientSchema, formatErrors } from "./schema.mjs";
 
 export const clientEnv = {
     NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
+    NEXT_PUBLIC_BLOG_URL: process.env.NEXT_PUBLIC_BLOG_URL,
 };
 
 const _clientEnv = clientSchema.safeParse(clientEnv);

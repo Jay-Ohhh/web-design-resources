@@ -21,14 +21,22 @@ export const config = {
 
 export default withAuth(
     // `withAuth` augments your `Request` with the user's token.
-    function middleware(req) {
-        // console.log(req.nextauth.token);
+    function middleware(request) {
+        // console.log(request.nextauth.token);
         /**
          * @see https://github.com/vercel/next.js/issues/43704
          * @see https://nextjs.org/docs/app/api-reference/functions/next-response#next
          */
-        const requestHeaders = new Headers(req.headers);
-        requestHeaders.set("x-current-url", req.url);
+        const requestHeaders = new Headers(request.headers);
+        requestHeaders.set("x-current-url", request.url);
+
+        let ip = request.ip ?? request.headers.get("x-real-ip");
+        const forwardedFor = request.headers.get("x-forwarded-for");
+
+        if (!ip && forwardedFor) {
+            ip = forwardedFor.split(",").at(0) ?? null;
+            ip && requestHeaders.set("x-current-ip", ip);
+        }
 
         return NextResponse.next({
             request: {

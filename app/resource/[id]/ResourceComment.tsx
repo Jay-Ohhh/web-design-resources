@@ -2,7 +2,6 @@
 
 import Button from "@/components/ui/Button";
 import Textarea from "@/components/ui/Textarea";
-import { Prisma } from "@prisma/client";
 import { trpc } from "@/lib/trpc";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";

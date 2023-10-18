@@ -3,4 +3,4 @@ interface UserSession extends import("next-auth").Session {
         id: string;
         authType: import("next-auth/providers").ProviderType;
     };
-}; 
+};

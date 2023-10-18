@@ -79,13 +79,13 @@ export const resourceCategoriesSlug = [
 
 
 const title = "Web Design Resources";
-const description = "A platform for sharing the best design Resources around the web.";
+const description = "A platform for sharing the best design resources, development, applications, articles, UI libraries, tutorials, tools, and software around the web";
 const author = "Jay_Ohhh";
 
 export const defaultMetadata: Metadata = {
     title,
     description,
-    keywords: "Web Design,resources,applications,UI libraries,tools,starters,boilerplates,tutorials,articles,software",
+    keywords: "Web Sources, design resources, development, applications, articles, tutorials, tools, UI libraries,  software",
     authors: [
         {
             name: author,

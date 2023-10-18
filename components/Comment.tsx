@@ -1,6 +1,5 @@
 "use client";
 
-import { Prisma } from "@prisma/client";
 import Image from "next/image";
 import Link from "./ui/Link";
 import dayjs from "dayjs";

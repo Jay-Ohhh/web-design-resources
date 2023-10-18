@@ -67,7 +67,7 @@ export default function DropdownAvatar() {
         <DropdownMenuItem>
           <Link
             className="block w-full dark:text-slate-100"
-            href="/user-settings"
+            href={`/user-settings/${session?.user?.id || ""}`}
           >
             Account Settings
           </Link>
