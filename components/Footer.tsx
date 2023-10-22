@@ -2,12 +2,10 @@
 
 import Link from "@/components/ui/Link";
 import { AiFillGithub } from "react-icons/ai";
-import { useTheme } from "next-themes";
-import Image from "next/image";
 import SiteLogo from "./SiteLogo";
+import { githubRepoUrl } from "@/lib/constants";
 
 const Footer = () => {
-    const { theme } = useTheme();
 
     return (
         <footer>
@@ -52,7 +50,7 @@ const Footer = () => {
                                 <li className="mb-4">
                                     <Link
                                         target="_blank"
-                                        href="https://github.com/Jay-Ohhh/web-design-resources"
+                                        href={githubRepoUrl}
                                         className="text-sm font-light hover:underline "
                                     >
                                         GitHub
@@ -87,7 +85,7 @@ const Footer = () => {
                     </span>
                     <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
                         <Link
-                            href="https://github.com/Jay-Ohhh/web-design-resources"
+                            href={githubRepoUrl}
                             target="_blank"
                             className="hover text-slate-500 duration-200 hover:text-slate-900 dark:text-slate-300 dark:hover:text-white"
                         >

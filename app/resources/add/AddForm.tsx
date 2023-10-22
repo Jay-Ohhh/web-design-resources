@@ -21,6 +21,8 @@ import ResourcePreview from "@/components/ResourcePreview";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useSession } from "next-auth/react";
 import { toast } from "@/components/Toast/useToast";
+import { env } from "@/env/client.mjs";
+import { indexing } from "@/lib/client-fetch";
 
 export default function AddForm() {
     const [title, setTitle] = useState("");
@@ -36,6 +38,10 @@ export default function AddForm() {
             router.push(
                 `/resources/${category.toLowerCase().replaceAll("_", "-")}`
             );
+            indexing({
+                resourceId: data.id,
+                type: "URL_UPDATED"
+            });
         },
         onError: (error) => {
             toast({

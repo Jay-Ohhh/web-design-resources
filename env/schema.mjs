@@ -10,10 +10,7 @@ const requiredForProduction = () => process.env.NODE_ENV === "production"
 * To expose them to the client, prefix them with `NEXT_PUBLIC_`.
 */
 export const clientSchema = z.object({
-    NEXT_PUBLIC_NEXTAUTH_URL: z.preprocess(
-        (str) => process.env.NEXT_PUBLIC_VERCEL_URL ?? str,
-        process.env.NEXT_PUBLIC_VERCEL_URL ? z.string() : z.string().url()
-    ),
+    NEXT_PUBLIC_NEXTAUTH_URL: z.string().url(),
     NEXT_PUBLIC_BLOG_URL: z.string().url().optional(),
 });
 
@@ -25,22 +22,14 @@ export const serverSchema = z.object({
     DATABASE_URL: z.string().url(),
     NODE_ENV: z.enum(["development", "test", "production"]),
     NEXTAUTH_SECRET: requiredForProduction(),
-    NEXTAUTH_URL: z.preprocess(
-        // This makes Vercel deployments not fail if you don't set NEXTAUTH_URL
-        // Since NextAuth.js automatically uses the VERCEL_URL if present.
-        (str) => process.env.NEXT_PUBLIC_VERCEL_URL ?? str,
-        /**
-         * VERCEL_URL doesn't include `https://` so it cant be validated as a URL
-         * 
-         * @see https://vercel.com/docs/concepts/projects/environment-variables/system-environment-variables
-         */
-        process.env.NEXT_PUBLIC_VERCEL_URL ? z.string() : z.string().url()
-    ),
+    NEXTAUTH_URL: z.string().url(),
     GOOGLE_CLIENT_ID: z.string().min(1).trim().optional(),
     GOOGLE_CLIENT_SECRET: z.string().min(1).trim().optional(),
     GITHUB_CLIENT_ID: z.string().min(1).trim(),
     GITHUB_CLIENT_SECRET: z.string().min(1).trim(),
     GITHUB_TOKEN: z.string().min(1).trim(),
+    CLIENT_EMIAL: z.string().min(1).trim().optional(),
+    PRIVATE_KEY: z.string().min(1).trim().optional(),
 });
 
 export const formatErrors = (

@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:init": "npx dotenv -e .env.local -- npx prisma migrate dev --name init",
-    "db:migrate": "npx dotenv -e .env.local -- npx prisma migrate dev",
-    "db:deploy": "npx dotenv -e .env.production.local -- npx prisma migrate deploy"
+    "db:init": "dotenv -e .env.local -- prisma migrate dev --name init",
+    "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
+    "db:deploy": "dotenv -e .env.production.local -- prisma migrate deploy"
+  },
+  "prisma": {
+    "seed": "dotenv -e .env.local -- tsx prisma/seed.ts"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^1.0.0",
@@ -43,9 +46,9 @@
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.9",
     "framer-motion": "^10.12.18",
-    "lodash": "^4.17.21",
+    "googleapis": "^128.0.0",
     "lucide-react": "^0.259.0",
-    "next": "^13.4.9",
+    "next": "^13.5.5",
     "next-auth": "^4.22.1",
     "next-themes": "^0.2.1",
     "postcss": "8.4.25",
@@ -67,7 +70,7 @@
     "prisma": "^4.16.2",
     "sass": "^1.63.6",
     "tailwindcss-animate": "^1.0.6",
-    "ts-node": "^10.9.1",
+    "tsx": "^3.14.0",
     "typescript": "^5.1.6"
   }
 }

@@ -46,6 +46,7 @@ model User {
   emailVerified DateTime?
   image         String?
   signInAt      DateTime       @default(now())
+  resourceCount Int?
   accounts      Account[]
   sessions      Session[]
   nextResources NextResource[]
@@ -71,6 +72,7 @@ model NextResource {
   categorySlug String
   tags         Tag[]
   comments     Comment[]
+  // official link of a resource
   link         String    @unique
   author       User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId     String

@@ -4,7 +4,6 @@ import { TRPCError } from "@trpc/server";
 import { resourceCategories } from "@/lib/constants";
 import { getGithubRepo } from "@/lib/server";
 
-
 function purifyTags(tags: string) {
     return (
         tags
@@ -146,29 +145,41 @@ export const resourceRouter = createTRPCRouter({
 
             const tagArray = purifyTags(input.tags);
 
-            const resource = await ctx.prisma.nextResource.create({
-                data: {
-                    authorId,
-                    description: input.description,
-                    link: input.link,
-                    githubLink: input.githubLink || null,
-                    title: input.title,
-                    githubAvatar: githubData?.owner.avatar_url || null,
-                    category: input.category,
-                    categorySlug: input.categorySlug,
-                    authType: input.authType,
-                    tags: {
-                        connectOrCreate: tagArray.map(tagName => ({
-                            where: { name: tagName },
-                            create: { name: tagName },
-                        }))
+            const [resource] = await ctx.prisma.$transaction([
+                ctx.prisma.nextResource.create({
+                    data: {
+                        authorId,
+                        description: input.description,
+                        link: input.link,
+                        githubLink: input.githubLink || null,
+                        title: input.title,
+                        githubAvatar: githubData?.owner.avatar_url || null,
+                        category: input.category,
+                        categorySlug: input.categorySlug,
+                        authType: input.authType,
+                        tags: {
+                            connectOrCreate: tagArray.map(tagName => ({
+                                where: { name: tagName },
+                                create: { name: tagName },
+                            }))
+                        },
                     },
-                },
-                include: {
-                    tags: true,
-                    author: true,
-                }
-            });
+                    include: {
+                        tags: true,
+                        author: true,
+                    }
+                }),
+                ctx.prisma.user.update({
+                    where: {
+                        id: authorId
+                    },
+                    data: {
+                        resourceCount: {
+                            increment: 1,
+                        }
+                    }
+                })
+            ]);
 
             return resource;
         }),
@@ -285,11 +296,23 @@ export const resourceRouter = createTRPCRouter({
                 });
             }
 
-            const deleteResource = await ctx.prisma.nextResource.delete({
-                where: {
-                    id: resourceId,
-                }
-            });
+            const [deleteResource] = await ctx.prisma.$transaction([
+                ctx.prisma.nextResource.delete({
+                    where: {
+                        id: resourceId,
+                    }
+                }),
+                ctx.prisma.user.update({
+                    where: {
+                        id: authorId,
+                    },
+                    data: {
+                        resourceCount: {
+                            decrement: 1,
+                        }
+                    }
+                })
+            ]);
 
             return deleteResource;
         })

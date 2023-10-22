@@ -16,9 +16,7 @@ import { trpc } from "@/lib/trpc";
 function getBaseUrl() {
     if (typeof window !== "undefined") return ""; // browser should use relative url
 
-    const url = env.NEXT_PUBLIC_NEXTAUTH_URL || "";
-
-    return process.env.NEXT_PUBLIC_VERCEL_URL ? `https://${url}` : url;
+    return env.NEXT_PUBLIC_NEXTAUTH_URL;
 }
 
 export default function TrpcProvider(props: { children: React.ReactNode; }) {

@@ -1,7 +1,7 @@
 import { clientSchema, formatErrors } from "./schema.mjs";
 
 export const clientEnv = {
-    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL,
+    NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL || `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`,
     NEXT_PUBLIC_BLOG_URL: process.env.NEXT_PUBLIC_BLOG_URL,
 };
 

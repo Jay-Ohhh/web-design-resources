@@ -9,12 +9,19 @@ const serverEnv = {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-    NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+    /**
+     * VERCEL_URL doesn't include `https://` so it cant be validated as a URL
+     * 
+     * @see https://vercel.com/docs/concepts/projects/environment-variables/system-environment-variables
+     */
+    NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL || `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GITHUB_TOKEN: process.env.GITHUB_TOKEN,
+    CLIENT_EMIAL: process.env.CLIENT_EMIAL,
+    PRIVATE_KEY: process.env.PRIVATE_KEY,
 };
 
 const _serverEnv = serverSchema.safeParse(serverEnv);

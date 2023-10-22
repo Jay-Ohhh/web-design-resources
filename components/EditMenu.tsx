@@ -42,6 +42,7 @@ import LoadingSpinner from "./ui/LoadingSpinner";
 import { type MutationOptions } from "@tanstack/react-query";
 import { type Resource } from "./ResourceCard";
 import { toast } from "./Toast/useToast";
+import { indexing } from "@/lib/client-fetch";
 
 export type EditMenuProps = {
     data: Resource;
@@ -68,6 +69,10 @@ export default function EditMenu(props: EditMenuProps) {
                 title: "Success 🎉",
                 description: `Resource ${data.title} updated successfully.`,
             });
+            indexing({
+                resourceId: data.id,
+                type: "URL_UPDATED"
+            });
         },
         onError: handleError
     });
@@ -78,6 +83,10 @@ export default function EditMenu(props: EditMenuProps) {
             toast({
                 title: "Success 🎉",
                 description: `Resource ${data.title} deleted successfully.`,
+            });
+            indexing({
+                resourceId: data.id,
+                type: "URL_DELETED"
             });
         },
         onError: handleError

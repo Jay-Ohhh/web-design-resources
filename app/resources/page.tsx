@@ -83,7 +83,7 @@ export default async function Resources(props: PageProps) {
                 : isOpenSourceQuery;
 
     const { resources, total } = await (async () => {
-        const [res, total] = await prisma.$transaction([
+        const [res, total] = await Promise.all([
             prisma.nextResource.findMany({
                 skip: offset * limit,
                 take: limit,

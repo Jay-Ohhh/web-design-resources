@@ -7,6 +7,8 @@ export const inter = Inter({
     subsets: ["latin"],
 });
 
+export const githubRepoUrl = "https://github.com/Jay-Ohhh/web-design-resources";
+
 export const homepageCards = [
     {
         id: 0,
@@ -161,3 +163,5 @@ export const defaultMetadata: Metadata = {
         // "baidu-site-verification": ""
     }
 };
+
+export const staticPagePaths = ["", "/resources"].concat(homepageCards.map(item => item.link));
