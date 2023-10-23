@@ -10,8 +10,7 @@
 
 <p align="center">
     <a href="https://github.com/Jay-Ohhh/web-design-resources"><img alt="Github Repo Stars" src="https://img.shields.io/github/stars/Jay-Ohhh/web-design-resources" /></a>
-    <a href="https://github.com/Jay-Ohhh/elegant-toast/blob/master/LICENSE" target="_blank" rel="nooppener noreferrer"><img alt="License: MIT" src="https://img.shields.io/github/license/Jay-Ohhh/web-design-resources?color=%2351aa38
-" /></a>
+    <a href="https://github.com/Jay-Ohhh/elegant-toast/blob/master/LICENSE" target="_blank" rel="nooppener noreferrer"><img alt="License: MIT" src="https://img.shields.io/github/license/Jay-Ohhh/web-design-resources?color=%2351aa38" /></a>
 </p>
 
 <p align="center">
