@@ -28,7 +28,7 @@ export const serverSchema = z.object({
     GITHUB_CLIENT_ID: z.string().min(1).trim(),
     GITHUB_CLIENT_SECRET: z.string().min(1).trim(),
     GITHUB_TOKEN: z.string().min(1).trim(),
-    CLIENT_EMIAL: z.string().min(1).trim().optional(),
+    CLIENT_EMAIL: z.string().min(1).trim().optional(),
     PRIVATE_KEY: z.string().min(1).trim().optional(),
 });
 

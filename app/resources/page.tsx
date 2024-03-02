@@ -19,7 +19,7 @@ type PageProps = {
 
 export async function generateMetadata(
     { params, searchParams }: PageProps,
-    parent?: ResolvingMetadata
+    parent: ResolvingMetadata
 ): Promise<Metadata> {
     const { category, tag } = params;
     const title = tag

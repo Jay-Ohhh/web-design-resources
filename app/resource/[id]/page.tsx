@@ -16,7 +16,7 @@ type PageProps = {
 
 export async function generateMetadata(
     { params, }: PageProps,
-    parent?: ResolvingMetadata
+    parent: ResolvingMetadata
 ): Promise<Metadata | undefined> {
     const data = await prisma.nextResource.findUnique({
         where: {
@@ -31,7 +31,7 @@ export async function generateMetadata(
     if (data) {
         const title = data?.title;
         const description = data?.description;
-        const parentMetadata = (await parent) || defaultMetadata;
+        const parentMetadata = await parent;
 
         return {
             title,

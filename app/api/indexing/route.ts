@@ -1,12 +1,14 @@
 import { google } from "googleapis";
 import { env } from "@/env/server.mjs";
 
-export async function POST(data: {
-    url: string;
-    type: "URL_UPDATED" | "URL_DELETED";
-}) {
+export async function POST(request: Request) {
+    const data: {
+        url: string;
+        type: "URL_UPDATED" | "URL_DELETED";
+    } = await request.json();
+
     const jwtClient = new google.auth.JWT(
-        env.CLIENT_EMIAL,
+        env.CLIENT_EMAIL,
         undefined,
         env.PRIVATE_KEY,
         ["https://www.googleapis.com/auth/indexing"],
@@ -17,7 +19,7 @@ export async function POST(data: {
         const tokens = await jwtClient.authorize();
 
         if (!tokens || !tokens.access_token) {
-            return Response.json({ err_msg: "no tokens" });
+            return (Response as any).json({ err_msg: "no tokens" });
         }
 
         /**
@@ -40,6 +42,6 @@ export async function POST(data: {
 
         return res.json();
     } catch (err) {
-        return Response.json({ err });
+        return (Response as any).json({ err });
     }
 }
