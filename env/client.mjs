@@ -3,6 +3,9 @@ import { clientSchema, formatErrors } from "./schema.mjs";
 export const clientEnv = {
     NEXT_PUBLIC_NEXTAUTH_URL: process.env.NEXT_PUBLIC_NEXTAUTH_URL || `https://${process.env.NEXT_PUBLIC_VERCEL_URL}`,
     NEXT_PUBLIC_BLOG_URL: process.env.NEXT_PUBLIC_BLOG_URL,
+    NEXT_PUBLIC_CONTACT_EMAIL: process.env.NEXT_PUBLIC_CONTACT_EMAIL,
+    NEXT_PUBLIC_GA_ID: process.env.NEXT_PUBLIC_GA_ID,
+    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
 };
 
 const _clientEnv = clientSchema.safeParse(clientEnv);

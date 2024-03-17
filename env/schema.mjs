@@ -12,6 +12,9 @@ const requiredForProduction = () => process.env.NODE_ENV === "production"
 export const clientSchema = z.object({
     NEXT_PUBLIC_NEXTAUTH_URL: z.string().url(),
     NEXT_PUBLIC_BLOG_URL: z.string().url().optional(),
+    NEXT_PUBLIC_CONTACT_EMAIL: z.string().email().optional(),
+    NEXT_PUBLIC_GA_ID: z.string().optional(),
+    NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION: z.string().optional(),
 });
 
 /**

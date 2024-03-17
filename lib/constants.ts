@@ -87,7 +87,7 @@ const author = "Jay_Ohhh";
 export const defaultMetadata: Metadata = {
     title,
     description,
-    keywords: "Web Sources, design resources, development, applications, articles, tutorials, tools, UI libraries,  software",
+    keywords: "Web Sources, design resources, development, applications, articles, tutorials, tools, UI libraries, software",
     authors: [
         {
             name: author,
@@ -96,25 +96,8 @@ export const defaultMetadata: Metadata = {
     ],
     creator: "Jay_Ohhh",
     publisher: "Jay_Ohhh",
-    viewport: {
-        width: "device-width",
-        initialScale: 1,
-        maximumScale: 5,
-        viewportFit: "cover",
-    },
     applicationName: title,
-    colorScheme: "light dark",
     metadataBase: new URL(env.NEXT_PUBLIC_NEXTAUTH_URL),
-    themeColor: [
-        {
-            media: "(prefers-color-scheme: light)",
-            color: "#ffffff",
-        },
-        {
-            media: "(prefers-color-scheme: dark)",
-            color: "#0f172a",
-        },
-    ],
     category: "web app",
     openGraph: {
         title,
@@ -160,6 +143,7 @@ export const defaultMetadata: Metadata = {
     other: {
         "applicable-device": "pc,mobile",
         "msapplication-TileColor": "#ffffff",
+        "google-site-verification": env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || "",
         // "baidu-site-verification": ""
     }
 };
