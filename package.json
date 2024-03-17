@@ -9,7 +9,8 @@
     "lint": "next lint",
     "db:init": "dotenv -e .env.local -- prisma migrate dev --name init",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
-    "db:deploy": "dotenv -e .env.production.local -- prisma migrate deploy"
+    "db:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
+    "postinstall": "prisma generate"
   },
   "prisma": {
     "seed": "dotenv -e .env.local -- tsx prisma/seed.ts"
@@ -67,6 +68,7 @@
   "devDependencies": {
     "@types/node": "^20.4.1",
     "dotenv-cli": "^7.2.1",
+    "encoding": "^0.1.13",
     "prisma": "^4.16.2",
     "sass": "^1.63.6",
     "tailwindcss-animate": "^1.0.6",
