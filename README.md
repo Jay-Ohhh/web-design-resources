@@ -26,7 +26,7 @@
 
 Web Design Resources is a platform for sharing the best design resources, development, applications, articles, UI libraries, tutorials, tools, and software around the web.
 
-**You can visit the website by clicking [here](https://next.web-sources.net).**
+**You can visit the website by clicking [here](https://resource.web-sources.net).**
 
 ## Features
 
