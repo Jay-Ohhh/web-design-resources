@@ -60,7 +60,7 @@ export default function ResourcePreview(props: ResourcePreviewProps) {
             </div>
             <div className="flex items-center justify-between">
                 <button className={buttonVariants({ variant: "default", size: "sm" })}>
-                    See details
+                    Details
                 </button>
                 <h4 className="flex items-center justify-center gap-1">
                     <div className="flex items-center gap-1">
