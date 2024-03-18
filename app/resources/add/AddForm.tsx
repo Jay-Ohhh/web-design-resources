@@ -32,7 +32,7 @@ export default function AddForm() {
     const router = useRouter();
     const { data: session } = useSession() as unknown as { data: UserSession; };
 
-    const { mutate, isLoading: isLoadingAdd } = trpc.resource.create.useMutation({
+    const { mutate, isPending: isLoadingAdd } = trpc.resource.create.useMutation({
         onSuccess: (data) => {
             router.push(
                 `/resources/${category.toLowerCase().replaceAll("_", "-")}`
@@ -53,13 +53,14 @@ export default function AddForm() {
     const { register, handleSubmit } = useForm<Inputs>();
     const onSubmit: SubmitHandler<Inputs> = (data) => {
         const categorySlug = data.category.toLowerCase().replaceAll("_", "-");
-        mutate({ ...data, categorySlug, authType: session.user?.authType });
+        mutate({ ...data, categorySlug, authType: session.user?.authType, githubLink: data.githubLink || undefined });
     };
 
     return (
         <>
             <form
                 className="w-full md:w-1/2"
+                autoComplete="off"
                 onSubmit={handleSubmit(onSubmit)}
             >
                 <div className="flex w-full flex-col gap-8">

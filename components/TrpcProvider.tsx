@@ -12,6 +12,7 @@ import superjson from "superjson";
 import { env } from "@/env/client.mjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { trpc } from "@/lib/trpc";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function getBaseUrl() {
     if (typeof window !== "undefined") return ""; // browser should use relative url
@@ -23,13 +24,6 @@ export default function TrpcProvider(props: { children: React.ReactNode; }) {
     const [queryClient] = useState(() => new QueryClient());
     const [trpcClient] = useState(() =>
         trpc.createClient({
-            /**
-             * Transformer used for data de-serialization from the server
-             * 
-             * @see https://trpc.io/docs/data-transformers
-             */
-            transformer: superjson,
-
             /**
              * Links used to determine request flow from client to server.
              * 
@@ -48,6 +42,12 @@ export default function TrpcProvider(props: { children: React.ReactNode; }) {
                      * @link https://trpc.io/docs/ssr
                      **/
                     url: `${getBaseUrl()}/api/trpc`,
+                    /**
+                    * Transformer used for data de-serialization from the server
+                    * 
+                    * @see https://trpc.io/docs/data-transformers
+                    */
+                    transformer: superjson,
                 })
             ],
         }),
@@ -57,6 +57,7 @@ export default function TrpcProvider(props: { children: React.ReactNode; }) {
         <trpc.Provider client={trpcClient} queryClient={queryClient}>
             <QueryClientProvider client={queryClient}>
                 {props.children}
+                <ReactQueryDevtools />
             </QueryClientProvider>
         </trpc.Provider>
     );

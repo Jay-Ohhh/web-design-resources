@@ -34,9 +34,11 @@ export default function Navbar() {
                         height={40}
                     />
                 </Link>
-                <Suspense>
-                    <SearchBar />
-                </Suspense>
+                <div className="col-span-3">
+                    <Suspense>
+                        <SearchBar />
+                    </Suspense>
+                </div>
                 <div className="flex items-center justify-end gap-3">
                     <ThemeSwitch />
                     <Suspense>

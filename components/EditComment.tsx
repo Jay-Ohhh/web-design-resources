@@ -52,7 +52,7 @@ export default function EditComment(props: EditCommentProps) {
         handleSubmit,
     } = useForm<Inputs>();
 
-    const { mutate, isLoading: isLoadingUpdateComment } =
+    const { mutate, isPending: isLoadingUpdateComment } =
         trpc.comment.update.useMutation({
             onSuccess: async (data) => {
                 toast({
@@ -66,7 +66,7 @@ export default function EditComment(props: EditCommentProps) {
             },
         });
 
-    const { mutate: deleteComment, isLoading: isLoadingDeleteComment } =
+    const { mutate: deleteComment, isPending: isLoadingDeleteComment } =
         trpc.comment.delete.useMutation({
             onSuccess: async () => {
                 toast({
@@ -100,6 +100,7 @@ export default function EditComment(props: EditCommentProps) {
                     </div>
                     <div className="mt-2">
                         <form
+                            autoComplete="off"
                             onSubmit={handleSubmit(onSubmit)}
                         >
                             <div className="space-y-2">

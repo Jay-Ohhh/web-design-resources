@@ -32,7 +32,7 @@ export default function ResourceComment(props: ResourceCommentProps) {
         // formState: { errors },
     } = useForm<Inputs>();
 
-    const { mutate: mutateComment, isLoading: isLoadingAddComment } = trpc.comment.create.useMutation({
+    const { mutate: mutateComment, isPending: isLoadingAddComment } = trpc.comment.create.useMutation({
         onSuccess: async (data) => {
             setComments(prev => [data, ...prev]);
             reset();
@@ -60,6 +60,7 @@ export default function ResourceComment(props: ResourceCommentProps) {
                 <form
                     onSubmit={handleSubmit(onSubmit)}
                     className="flex flex-col items-start gap-4"
+                    autoComplete="off"
                 >
                     <Textarea
                         id="content"

@@ -33,7 +33,7 @@ export default function Resource(props: ResourceProps) {
     const [cardData, setCardData] = useState(data);
     const [favorite, setFavorite] = useState(cardData.liked);
     const [likeCount, setLikeCount] = useState(cardData.likesCount);
-    const { mutate, isLoading } = trpc.like.create.useMutation({
+    const { mutate, isPending } = trpc.like.create.useMutation({
         onSuccess: async () => { }
     });
 
@@ -94,7 +94,7 @@ export default function Resource(props: ResourceProps) {
                     <div className="flex items-center">
                         <button
                             className="flex w-9 h-9 items-center justify-center rounded-md border-2 p-1"
-                            disabled={isLoading}
+                            disabled={isPending}
                             onClick={() => {
                                 if (session?.user?.id) {
                                     setLikeCount((prev) => prev! + (favorite ? -1 : 1));

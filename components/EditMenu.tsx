@@ -61,7 +61,7 @@ export default function EditMenu(props: EditMenuProps) {
         });
     };
 
-    const { mutate, isLoading: isLoadingUpdate } = trpc.resource.update.useMutation({
+    const { mutate, isPending: isLoadingUpdate } = trpc.resource.update.useMutation({
         onSuccess: async (data) => {
             setFormOpen(prev => !prev);
             setData(data);
@@ -77,7 +77,7 @@ export default function EditMenu(props: EditMenuProps) {
         onError: handleError
     });
 
-    const { mutate: mutateDelete, isLoading: isLoadingDelete } = trpc.resource.delete.useMutation({
+    const { mutate: mutateDelete, isPending: isLoadingDelete } = trpc.resource.delete.useMutation({
         onSuccess: async (data) => {
             setData(null);
             toast({
@@ -121,7 +121,11 @@ export default function EditMenu(props: EditMenuProps) {
                         Save changes after you&apos;re done editing this resource.
                     </SheetDescription>
                 </SheetHeader>
-                <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 py-4">
+                <form
+                    onSubmit={handleSubmit(onSubmit)}
+                    className="grid gap-4 py-4"
+                    autoComplete="off"
+                >
                     <div className="grid grid-cols-4 items-center gap-4">
                         <Label htmlFor="title" className="text-right text-xs md:text-sm">
                             Title

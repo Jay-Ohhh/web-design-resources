@@ -11,13 +11,13 @@ type Props = {
 
 const BaseProvider = ({ children }: Props) => {
     return (
-        <TrpcProvider>
-            <SessionProvider>
+        <SessionProvider>
+            <TrpcProvider>
                 <ThemeProvider defaultTheme="light" attribute="class">
                     {children}
                 </ThemeProvider>
-            </SessionProvider>
-        </TrpcProvider>
+            </TrpcProvider>
+        </SessionProvider>
     );
 };
 

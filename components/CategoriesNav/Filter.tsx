@@ -14,6 +14,7 @@ export default function Filter() {
 
     useEffect(() => {
         urlObjRef.current = new URL(location.href);
+        setChecked(!!searchParams.get("public"));
     }, [searchParams]);
 
     return (
