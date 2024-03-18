@@ -53,7 +53,7 @@ export default function ResourcePreview(props: ResourcePreviewProps) {
                 </div>
             </div>
             <div className="py-2">
-                <p>{props.description}</p>
+                <p className="whitespace-pre-line">{props.description}</p>
                 <div className="my-2 flex flex-wrap gap-2">
                     {splitTagsToArray(props.tags)}
                 </div>

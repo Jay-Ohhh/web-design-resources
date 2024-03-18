@@ -92,52 +92,67 @@ export default function Resource(props: ResourceProps) {
 
                 <div className="flex justify-between mt-5 w-full sm:flex-col sm:w-auto sm:mt-0">
                     <div className="flex items-center">
-                        <button
-                            className="flex w-9 h-9 items-center justify-center rounded-md border-2 p-1"
-                            disabled={isPending}
-                            onClick={() => {
-                                if (session?.user?.id) {
-                                    setLikeCount((prev) => prev! + (favorite ? -1 : 1));
-                                    setFavorite(!favorite);
-                                    mutate({
-                                        resourceId: cardData.id,
-                                        userId: session.user.id,
-                                    });
-                                } else {
-                                    toast({
-                                        description: "You need to be signed in to like a resource.",
-                                    });
-                                }
-                            }}
-                        >
-                            <AnimatePresence>
-                                {favorite ? (
-                                    <motion.div
-                                        key={1}
-                                        // https://www.framer.com/motion/component/##server-side-rendering
-                                        initial={false}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.3 }}
-                                        exit={{ opacity: 0 }}
-                                        className="relative"
-                                    >
-                                        <AiFillHeart size={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600" />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key={2}
-                                        initial={false}
-                                        animate={{ opacity: 1 }}
-                                        transition={{ duration: 0.3 }}
-                                        exit={{ opacity: 0 }}
-                                        className="relative"
-                                    >
-                                        <AiOutlineHeart size={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </button>
-                        <span className="ml-2">{numberFormatter(likeCount)}</span>
+                        {session?.user.id === cardData.author.id && (
+                            <TooltipProvider>
+                                <Tooltip>
+                                    <TooltipTrigger className="flex">
+                                        <EditMenu data={cardData} setData={setCardData as any} />
+                                    </TooltipTrigger>
+                                    <TooltipContent side="left">
+                                        <p>Edit resource</p>
+                                    </TooltipContent>
+                                </Tooltip>
+                            </TooltipProvider>
+                        )}
+
+                        <div className="flex items-center ml-3">
+                            <button
+                                className="flex w-9 h-9 items-center justify-center rounded-md border-2 p-1"
+                                disabled={isPending}
+                                onClick={() => {
+                                    if (session?.user?.id) {
+                                        setLikeCount((prev) => prev! + (favorite ? -1 : 1));
+                                        setFavorite(!favorite);
+                                        mutate({
+                                            resourceId: cardData.id,
+                                            userId: session.user.id,
+                                        });
+                                    } else {
+                                        toast({
+                                            description: "You need to be signed in to like a resource.",
+                                        });
+                                    }
+                                }}
+                            >
+                                <AnimatePresence>
+                                    {favorite ? (
+                                        <motion.div
+                                            key={1}
+                                            // https://www.framer.com/motion/component/##server-side-rendering
+                                            initial={false}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                            exit={{ opacity: 0 }}
+                                            className="relative"
+                                        >
+                                            <AiFillHeart size={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-red-600" />
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div
+                                            key={2}
+                                            initial={false}
+                                            animate={{ opacity: 1 }}
+                                            transition={{ duration: 0.3 }}
+                                            exit={{ opacity: 0 }}
+                                            className="relative"
+                                        >
+                                            <AiOutlineHeart size={20} className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2" />
+                                        </motion.div>
+                                    )}
+                                </AnimatePresence>
+                            </button>
+                            <span className="ml-2">{numberFormatter(likeCount)}</span>
+                        </div>
                     </div>
                     <Link
                         className="flex items-center gap-1"
@@ -154,18 +169,6 @@ export default function Resource(props: ResourceProps) {
                         )}
                         <span>{cardData.author.name}</span>
                     </Link>
-                    {session?.user.id === cardData.author.id && (
-                        <TooltipProvider>
-                            <Tooltip>
-                                <TooltipTrigger className="flex">
-                                    <EditMenu data={cardData} setData={setCardData as any} />
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                    <p>Edit resource</p>
-                                </TooltipContent>
-                            </Tooltip>
-                        </TooltipProvider>
-                    )}
                 </div>
             </div >
 
@@ -174,7 +177,7 @@ export default function Resource(props: ResourceProps) {
                     {cardData.description}
                 </p>
             </div>
-            <div className="mt-8 flex w-full flex-wrap items-start justify-start gap-3 md:col-span-5">
+            <div className="flex-1 mt-8 flex w-full flex-wrap items-start justify-start gap-3 md:col-span-5">
                 {cardData.tags.map((tag) => (
                     <Link
                         key={tag.id}
