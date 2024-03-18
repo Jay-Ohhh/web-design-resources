@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import SignButton from "./SignInButton";
 
 export default function Login() {
@@ -10,14 +11,12 @@ export default function Login() {
                             Sign in
                         </h1>
                         <p className="box-border m-0 text-base font-normal leading-tight text-[#000000a5]">
-                            to continue to nextjs-resources
+                            to continue to Web-Design-Resources
                         </p>
                     </div>
-                    <SignButton />
-                    {/* <div className="text-[13px]">
-                        <span className="text-[#000000a5]">No account? </span>
-                        <Link href="/sign-up" className="font-semibold">Sign up</Link>
-                    </div> */}
+                    <Suspense>
+                        <SignButton />
+                    </Suspense>
                 </div>
             </div>
         </div>

@@ -21,7 +21,6 @@ import ResourcePreview from "@/components/ResourcePreview";
 import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import { useSession } from "next-auth/react";
 import { toast } from "@/components/Toast/useToast";
-import { env } from "@/env/client.mjs";
 import { indexing } from "@/lib/client-fetch";
 
 export default function AddForm() {

@@ -31,7 +31,7 @@
     "db:init": "dotenv -e .env.local -- prisma migrate dev --name init",
     "db:migrate": "dotenv -e .env.local -- prisma migrate dev",
     "db:deploy": "dotenv -e .env.production.local -- prisma migrate deploy",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate && next telemetry disable"
   },
   "prisma": {
     "seed": "dotenv -e .env.local -- tsx prisma/seed.ts"

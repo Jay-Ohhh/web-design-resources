@@ -3,7 +3,6 @@ import { prisma } from "@/server/db";
 import { ResolvingMetadata, type Metadata } from "next";
 import { getGithubRepo } from "@/lib/server";
 import Resource from "./Resource";
-import { defaultMetadata } from "@/lib/constants";
 import ResourceComment from "./ResourceComment";
 import { fetchServerSession } from "@/app/api/auth/[...nextauth]/authOptions";
 

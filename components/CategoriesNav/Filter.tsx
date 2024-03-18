@@ -2,7 +2,7 @@
 
 import useRouterRefresh from "@/hooks/useRouterRefresh";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Checkbox from "../ui/Checkbox";
 
 export default function Filter() {
@@ -17,21 +17,23 @@ export default function Filter() {
     }, [searchParams]);
 
     return (
-        <Checkbox
-            id="open-source"
-            label="Only Open Source"
-            checked={checked}
-            onCheckedChange={(val: boolean) => {
-                setChecked(val);
+        <Suspense>
+            <Checkbox
+                id="open-source"
+                label="Only Open Source"
+                checked={checked}
+                onCheckedChange={(val: boolean) => {
+                    setChecked(val);
 
-                if (val) {
-                    urlObjRef.current?.searchParams.set("public", "1");
-                } else {
-                    urlObjRef.current?.searchParams.delete("public");
-                }
+                    if (val) {
+                        urlObjRef.current?.searchParams.set("public", "1");
+                    } else {
+                        urlObjRef.current?.searchParams.delete("public");
+                    }
 
-                refresh(pathname + urlObjRef.current?.search);
-            }}
-        />
+                    refresh(pathname + urlObjRef.current?.search);
+                }}
+            />
+        </Suspense>
     );
 }

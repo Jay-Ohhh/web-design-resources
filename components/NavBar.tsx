@@ -17,6 +17,7 @@ import MobileSearchBar from "./MobileSearchBar";
 import ThemeSwitch from "./ThemeSwitch";
 import SiteLogo from "./SiteLogo";
 import { clientEnv } from "@/env/client.mjs";
+import { Suspense } from "react";
 
 const tooltipDelayDuration = 300;
 
@@ -33,10 +34,14 @@ export default function Navbar() {
                         height={40}
                     />
                 </Link>
-                <SearchBar />
+                <Suspense>
+                    <SearchBar />
+                </Suspense>
                 <div className="flex items-center justify-end gap-3">
                     <ThemeSwitch />
-                    <MobileSearchBar />
+                    <Suspense>
+                        <MobileSearchBar />
+                    </Suspense>
                     <TooltipProvider delayDuration={tooltipDelayDuration}>
                         <Tooltip>
                             <TooltipTrigger>
