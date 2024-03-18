@@ -148,4 +148,4 @@ export const defaultMetadata: Metadata = {
     }
 };
 
-export const staticPagePaths = ["", "/resources"].concat(homepageCards.map(item => item.link));
+export const staticPagePaths = ["", "/resources", "/terms-and-conditions", "/privacy"].concat(homepageCards.map(item => item.link));

@@ -13,7 +13,9 @@ export default function TermsAndConditions() {
                 Terms and Conditions
             </h1>
             <ul className="text-sm md:text-base">
-                <h3 className="mb-4 text-xl font-medium">1. Resource Sharing:</h3>
+                <h3 id="resource-sharing" className="mb-4 text-xl font-medium">
+                    1. Resource Sharing
+                </h3>
                 <li>
                     The Platform is a website dedicated to sharing the best design resources around the web.
                     These resources, including tools,
@@ -22,7 +24,9 @@ export default function TermsAndConditions() {
                     these resources are not owned by the Platform and are provided by
                     various contributors.
                 </li>
-                <h3 className="my-4 text-xl font-medium">2. Use of Resources:</h3>
+                <h3 className="my-4 text-xl font-medium">
+                    2. Use of Resources
+                </h3>
                 <li>
                     You may access and use the resources shared on the Platform for
                     personal or professional purposes related to your development
@@ -32,9 +36,8 @@ export default function TermsAndConditions() {
                     the resources before using them in your projects.
                 </li>
                 <h3 className="my-4 text-xl font-medium">
-                    3. Intellectual Property:
+                    3. Intellectual Property
                 </h3>
-
                 <li>
                     The intellectual property rights of the shared resources belong to
                     their respective owners. The Platform does not claim ownership or
@@ -42,7 +45,9 @@ export default function TermsAndConditions() {
                     property rights have been infringed upon, please contact me promptly
                     so that appropriate action can be taken.
                 </li>
-                <h3 className="my-4 text-xl font-medium">4. User Conduct:</h3>
+                <h3 className="my-4 text-xl font-medium">
+                    4. User Conduct
+                </h3>
                 <li>
                     When using the Platform, you agree to conduct yourself in a
                     responsible and lawful manner. This includes refraining from
@@ -59,7 +64,7 @@ export default function TermsAndConditions() {
                     section of the Platform.
                 </li>
                 <h3 className="my-4 text-xl font-medium">
-                    5. Disclaimer of Liability:
+                    5. Disclaimer of Liability
                 </h3>
                 <li>
                     The Platform provides the shared resources on an &quot;as is&quot;

@@ -68,7 +68,15 @@ const Footer = () => {
                                         href="/terms-and-conditions"
                                         className="text-sm font-light hover:underline"
                                     >
-                                        Terms &amp; Conditions
+                                        Terms
+                                    </Link>
+                                </li>
+                                <li className="mb-4">
+                                    <Link
+                                        href="/privacy"
+                                        className="text-sm font-light hover:underline"
+                                    >
+                                        Privacy
                                     </Link>
                                 </li>
                             </ul>
